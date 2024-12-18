@@ -1,40 +1,83 @@
 import 'dart:convert';
 import 'dart:developer' show log;
+import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../api/commands.dart';
-import '../api/events.dart';
-import 'player_state_bloc.dart';
+import 'package:gergle/api/commands.dart';
+import 'package:gergle/api/events.dart';
+import 'package:gergle/state/player_state_bloc.dart';
 
-class ConnectionStateBloc extends Bloc<ConnectionEvent, WebSocketChannel?> {
+@immutable
+sealed class PlayerConnectionState {}
+
+@immutable
+class Disconnected extends PlayerConnectionState {}
+
+@immutable
+class Connecting extends PlayerConnectionState {
+  final String uri;
+
+  Connecting(this.uri);
+}
+
+@immutable
+class Connected extends PlayerConnectionState {
+  final String uri;
+  final WebSocketChannel channel;
+
+  Connected(this.uri, this.channel);
+}
+
+@immutable
+class ConnectionError extends PlayerConnectionState {
+  final String message;
+  final String uri;
+
+  ConnectionError(this.message, this.uri);
+}
+
+class ConnectionStateBloc extends Bloc<PlayerConnectionEvent, PlayerConnectionState> {
   final PlayerStateBloc playerStateBloc;
 
-  String? _uri;
-  WebSocketChannel? _channel;
-
-  ConnectionStateBloc(this.playerStateBloc) : super(null) {
-
-    on<Connect>((event, emit) {
-      if (_channel != null && _uri == event.uri) {
-        log('Already connected to ${event.uri}');
-        return;
-      } else if (_channel != null) {
-        // Clear connection, and reconnect
-        state?.sink.close();
-        playerStateBloc.add(const ClearPlayerState());
-        emit(null);
+  ConnectionStateBloc(this.playerStateBloc) : super(Disconnected()) {
+    on<Connect>((event, emit) async {
+      if (state is Connected) {
+        if ((state as Connected).uri == event.uri) {
+          log('Already connected to ${event.uri}');
+          return;
+        } else {
+          // Clear connection, and reconnect
+          (state as Connected).channel.sink.close();
+          playerStateBloc.add(const ClearPlayerState());
+        }
       }
 
-      _uri = event.uri;
+      emit(Connecting(event.uri));
 
-      _channel = WebSocketChannel.connect(
+      final channel = WebSocketChannel.connect(
         Uri.parse(event.uri),
       );
 
-      _channel!.stream.listen(
+      try {
+        await channel.ready;
+      } on WebSocketChannelException catch (e) {
+        late final String message;
+        if (e.inner is WebSocketException) {
+          message = (e.inner as WebSocketException).message;
+        } else {
+          message = e.message ?? e.toString();
+        }
+
+        log('Error connecting to ${event.uri}: $message');
+        emit(ConnectionError(message, event.uri));
+        return;
+      }
+
+      channel.stream.listen(
         (event) {
           final jsonData = jsonDecode(event as String);
           if (jsonData is Map) {
@@ -60,33 +103,37 @@ class ConnectionStateBloc extends Bloc<ConnectionEvent, WebSocketChannel?> {
             }
           }
         },
-        onError: (error) {
+        onError: (error, stackTrace) {
           log('Error: $error');
+          log('Stack trace: $stackTrace');
         },
         onDone: () {
           add(Disconnect());
           log('Connection closed, reconnecting...');
-          add(Connect(_uri!));
+          add(Connect(event.uri));
         },
       );
 
-      emit(_channel);
+      emit(Connected(event.uri, channel));
     });
 
     on<Disconnect>((event, emit) {
-      _uri = null;
-      state?.sink.close(0, 'Disconnecting');
+      if (state is! Connected) {
+        log('Cannot disconnect when not connected');
+        return;
+      }
+      (state as Connected).channel.sink.close();
       playerStateBloc.add(const ClearPlayerState());
-      emit(null);
+      emit(Disconnected());
     });
 
     on<Command>((event, emit) {
-      if (_channel == null) {
+      if (state is! Connected) {
         log('Cannot send command when not connected');
         return;
       }
 
-      _channel!.sink.add(event.toJsonString());
+      (state as Connected).channel.sink.add(event.toJsonString());
     });
   }
 }

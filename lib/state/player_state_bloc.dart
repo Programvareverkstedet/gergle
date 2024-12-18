@@ -2,8 +2,8 @@ import 'dart:developer' show log;
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'player_state.dart';
-import '../api/events.dart';
+import 'package:gergle/api/events.dart';
+import 'package:gergle/state/player_state.dart';
 
 class PlayerStateBloc extends Bloc<Event, PlayerState?> {
   PlayerStateBloc() : super(null) {

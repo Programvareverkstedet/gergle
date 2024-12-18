@@ -1,7 +1,6 @@
-// TODO: handle typing and deserialization of events
 import 'package:flutter/foundation.dart';
 
-import '../state/player_state.dart';
+import 'package:gergle/state/player_state.dart';
 
 // NOTE: see DEFAULT_PROPERTY_SUBSCRIPTIONS in the websocket API source for greg-ng.
 

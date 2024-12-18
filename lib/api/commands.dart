@@ -1,16 +1,16 @@
 import 'dart:convert';
 
-sealed class ConnectionEvent {}
+sealed class PlayerConnectionEvent {}
 
-class Connect extends ConnectionEvent {
+class Connect extends PlayerConnectionEvent {
   final String uri;
 
   Connect(this.uri);
 }
 
-class Disconnect extends ConnectionEvent {}
+class Disconnect extends PlayerConnectionEvent {}
 
-class Command extends ConnectionEvent {
+class Command extends PlayerConnectionEvent {
   final String type;
   final Map<String, dynamic> value;
 
