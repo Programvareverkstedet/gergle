@@ -11,7 +11,7 @@ class PlayerStateBloc extends Bloc<Event, PlayerState?> {
       emit(event.playerState);
     });
 
-    on <ClearPlayerState>((event, emit) {
+    on<ClearPlayerState>((event, emit) {
       emit(null);
     });
 

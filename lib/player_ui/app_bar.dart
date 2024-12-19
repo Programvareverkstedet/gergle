@@ -8,7 +8,7 @@ import 'package:gergle/player_ui/main.dart';
 import 'package:gergle/state/connection_state_bloc.dart';
 import 'package:gergle/state/player_state_bloc.dart';
 
-class PlayerUIAppBar{
+class PlayerUIAppBar {
   static AppBar appbar(BuildContext context) {
     return AppBar(
       title: const Text('Gergle'),
@@ -70,14 +70,16 @@ class PlayerUIAppBar{
             connectionStateBloc.add(Connect(value));
           },
         ),
-        playerBlocBuilder(buildProps: (p) => [p.isPausedForCache], builder: (context, state) {
-          // TODO: why is the server not sending paused-for-cache events?
-          if (state.isPausedForCache) {
-            return const CircularProgressIndicator();
-          } else {
-            return const SizedBox.shrink();
-          }
-        }),
+        playerBlocBuilder(
+            buildProps: (p) => [p.isPausedForCache],
+            builder: (context, state) {
+              // TODO: why is the server not sending paused-for-cache events?
+              if (state.isPausedForCache) {
+                return const CircularProgressIndicator();
+              } else {
+                return const SizedBox.shrink();
+              }
+            }),
         IconButton(
           icon: const Icon(Icons.settings),
           onPressed: () {

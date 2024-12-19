@@ -36,7 +36,7 @@ sealed class PropertyChangedEvent extends Event {
 class PlaylistChange extends PropertyChangedEvent {
   final Playlist playlist;
 
-  const PlaylistChange(this.playlist, { super.local }) : super();
+  const PlaylistChange(this.playlist, {super.local}) : super();
 
   factory PlaylistChange.fromJson(dynamic json) {
     return PlaylistChange(
@@ -49,7 +49,7 @@ class PlaylistChange extends PropertyChangedEvent {
 class LoopPlaylistChange extends PropertyChangedEvent {
   final bool isLooping;
 
-  const LoopPlaylistChange(this.isLooping, { super.local }) : super();
+  const LoopPlaylistChange(this.isLooping, {super.local}) : super();
 
   factory LoopPlaylistChange.fromJson(dynamic json) {
     return LoopPlaylistChange(json == "inf");
@@ -60,7 +60,8 @@ class LoopPlaylistChange extends PropertyChangedEvent {
 class PercentPositionChange extends PropertyChangedEvent {
   final double currentPercentPosition;
 
-  const PercentPositionChange(this.currentPercentPosition, { super.local }) : super();
+  const PercentPositionChange(this.currentPercentPosition, {super.local})
+      : super();
 
   factory PercentPositionChange.fromJson(dynamic json) {
     return PercentPositionChange(json ?? 0.0);
@@ -71,7 +72,7 @@ class PercentPositionChange extends PropertyChangedEvent {
 class VolumeChange extends PropertyChangedEvent {
   final double volume;
 
-  const VolumeChange(this.volume, { super.local }) : super();
+  const VolumeChange(this.volume, {super.local}) : super();
 
   factory VolumeChange.fromJson(dynamic json) {
     return VolumeChange(json);
@@ -82,10 +83,11 @@ class VolumeChange extends PropertyChangedEvent {
 class DurationChange extends PropertyChangedEvent {
   final Duration duration;
 
-  const DurationChange(this.duration, { super.local }) : super();
+  const DurationChange(this.duration, {super.local}) : super();
 
   factory DurationChange.fromJson(dynamic json) {
-    return DurationChange(Duration(milliseconds: ((json ?? 0.0) * 1000).round()));
+    return DurationChange(
+        Duration(milliseconds: ((json ?? 0.0) * 1000).round()));
   }
 }
 
@@ -93,7 +95,7 @@ class DurationChange extends PropertyChangedEvent {
 class PauseChange extends PropertyChangedEvent {
   final bool isPaused;
 
-  const PauseChange(this.isPaused, { super.local }) : super();
+  const PauseChange(this.isPaused, {super.local}) : super();
 
   factory PauseChange.fromJson(dynamic json) {
     return PauseChange(json as bool);
@@ -104,7 +106,7 @@ class PauseChange extends PropertyChangedEvent {
 class MuteChange extends PropertyChangedEvent {
   final bool isMuted;
 
-  const MuteChange(this.isMuted, { super.local }) : super();
+  const MuteChange(this.isMuted, {super.local}) : super();
 
   factory MuteChange.fromJson(dynamic json) {
     return MuteChange(json as bool);
@@ -115,7 +117,7 @@ class MuteChange extends PropertyChangedEvent {
 class TrackListChange extends PropertyChangedEvent {
   final List<SubtitleTrack> tracks;
 
-  const TrackListChange(this.tracks, { super.local }) : super();
+  const TrackListChange(this.tracks, {super.local}) : super();
 
   factory TrackListChange.fromJson(dynamic json) {
     final trackList = json as List;
@@ -130,7 +132,7 @@ class TrackListChange extends PropertyChangedEvent {
 class DemuxerCacheStateChange extends PropertyChangedEvent {
   final double cachedTimestamp;
 
-  const DemuxerCacheStateChange(this.cachedTimestamp, { super.local }) : super();
+  const DemuxerCacheStateChange(this.cachedTimestamp, {super.local}) : super();
 
   factory DemuxerCacheStateChange.fromJson(dynamic json) {
     final demuxerCacheState = json as Map?;
@@ -144,7 +146,7 @@ class DemuxerCacheStateChange extends PropertyChangedEvent {
 class PausedForCacheChange extends PropertyChangedEvent {
   final bool isPausedForCache;
 
-  const PausedForCacheChange(this.isPausedForCache, { super.local }) : super();
+  const PausedForCacheChange(this.isPausedForCache, {super.local}) : super();
 
   factory PausedForCacheChange.fromJson(dynamic json) {
     return PausedForCacheChange(json as bool? ?? false);

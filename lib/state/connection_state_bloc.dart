@@ -40,7 +40,8 @@ class ConnectionError extends PlayerConnectionState {
   ConnectionError(this.message, this.uri);
 }
 
-class ConnectionStateBloc extends Bloc<PlayerConnectionEvent, PlayerConnectionState> {
+class ConnectionStateBloc
+    extends Bloc<PlayerConnectionEvent, PlayerConnectionState> {
   final PlayerStateBloc playerStateBloc;
 
   ConnectionStateBloc(this.playerStateBloc) : super(Disconnected()) {

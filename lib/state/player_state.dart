@@ -33,7 +33,8 @@ class PlayerState {
   factory PlayerState.fromJson(Map<String, dynamic> json) {
     return PlayerState(
       cachedTimestamp: json['cached_timestamp'],
-      chapters: (json['chapters'] as List).map((e) => Chapter.fromJson(e)).toList(),
+      chapters:
+          (json['chapters'] as List).map((e) => Chapter.fromJson(e)).toList(),
       currentPercentPosition: json['current_percent_pos'],
       currentTrack: json['current_track'],
       duration: Duration(milliseconds: (json['duration'] * 1000).round()),
@@ -41,8 +42,12 @@ class PlayerState {
       isMuted: json['is_muted'],
       isPlaying: json['is_playing'],
       isPausedForCache: json['is_paused_for_cache'],
-      playlist: (json['playlist'] as List).map((e) => PlaylistItem.fromJson(e)).toList(),
-      subtitleTracks: (json['tracks'] as List).map((e) => SubtitleTrack.fromJson(e)).toList(),
+      playlist: (json['playlist'] as List)
+          .map((e) => PlaylistItem.fromJson(e))
+          .toList(),
+      subtitleTracks: (json['tracks'] as List)
+          .map((e) => SubtitleTrack.fromJson(e))
+          .toList(),
       volume: json['volume'],
     );
   }
@@ -64,7 +69,8 @@ class PlayerState {
     return PlayerState(
       cachedTimestamp: cachedTimestamp ?? this.cachedTimestamp,
       chapters: chapters ?? this.chapters,
-      currentPercentPosition: currentPercentPosition ?? this.currentPercentPosition,
+      currentPercentPosition:
+          currentPercentPosition ?? this.currentPercentPosition,
       currentTrack: currentTrack ?? this.currentTrack,
       duration: duration ?? this.duration,
       isLooping: isLooping ?? this.isLooping,
