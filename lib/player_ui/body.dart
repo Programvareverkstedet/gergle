@@ -64,9 +64,21 @@ class PlayerUIBody extends StatelessWidget {
       leading: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            "${i + 1}.",
-            style: Theme.of(context).textTheme.titleLarge,
+          Container(
+            width: 40,
+            height: 40,
+            padding: const EdgeInsets.all(3),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: item.current
+                  ? Theme.of(context).primaryColorLight
+                  : Theme.of(context).primaryColorLight.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              "${i + 1}",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),
           IconButton(
             icon: playerState.isPlaying && item.current
