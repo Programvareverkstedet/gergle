@@ -12,7 +12,8 @@ class PlayerUIAppBar {
   static AppBar appbar(BuildContext context) {
     return AppBar(
       title: const Text('Gergle'),
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Theme.of(context).colorScheme.surfaceBright,
+      surfaceTintColor: Colors.transparent,
       actions: [
         IconButton(
           icon: const Icon(Icons.copy_all),

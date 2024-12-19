@@ -26,6 +26,7 @@ class PlayerUIBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
+      color: Theme.of(context).colorScheme.surfaceBright,
       child: Row(
         children: [
           IconButton(

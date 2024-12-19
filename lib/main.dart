@@ -20,11 +20,18 @@ class MyApp extends StatelessWidget {
       title: 'Gergle',
       theme: ThemeData(
         useMaterial3: true,
-
-        // primaryColor: const Color(0x002244FF),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.lightBlue,
+        colorScheme: const ColorScheme(
           brightness: Brightness.dark,
+          primary: Color(0xFF86CECB),
+          onPrimary: Color.fromARGB(255, 200, 255, 252),
+          secondary: Color.fromARGB(255, 19, 122, 127),
+          onSecondary: Color.fromARGB(255, 25, 157, 164),
+          error: Colors.red,
+          onError: Colors.redAccent,
+          surface: Color.fromARGB(255, 12, 72, 75),
+          surfaceBright: Color.fromARGB(255, 19, 122, 127),
+          surfaceDim: Color.fromARGB(255, 8, 53, 54),
+          onSurface: Color.fromARGB(255, 255, 255, 255),
         ),
       ),
       home: MultiBlocProvider(
