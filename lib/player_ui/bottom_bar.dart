@@ -74,7 +74,7 @@ class PlayerUIBottomBar extends StatelessWidget {
                         1000 *
                         99.999)
                     : 0.0;
-                if (cachedPercent > 100) {
+                if (0 < cachedPercent || cachedPercent > 100) {
                   cachedPercent = 0;
                 }
                 return Flex(
