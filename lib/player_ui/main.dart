@@ -114,6 +114,39 @@ class PlayerUi extends StatelessWidget {
               ),
               Flex(
                 direction: Axis.horizontal,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context).colorScheme.surfaceDim,
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.secondary,
+                          width: 10,
+                        ),
+                      ),
+                      child: Image.asset(
+                        'assets/images/miku_cube.png',
+                        alignment: Alignment.topLeft,
+                      ),
+                    ),
+                  ),
+                  const Expanded(flex: 3, child: SizedBox.expand()),
+                  const Expanded(flex: 1, child: SizedBox.expand()),
+                ],
+              ),
+              Flex(
+                direction: Axis.horizontal,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(
@@ -121,7 +154,6 @@ class PlayerUi extends StatelessWidget {
                     child: Image.asset(
                       'assets/images/dance2.gif',
                       alignment: Alignment.bottomCenter,
-                      scale: 1.5,
                     ),
                   ),
                   const Expanded(flex: 3, child: SizedBox.expand()),
@@ -129,7 +161,6 @@ class PlayerUi extends StatelessWidget {
                     flex: 1,
                     child: Image.asset(
                       'assets/images/dance1.webp',
-                      scale: 0.5,
                       alignment: Alignment.bottomCenter,
                     ),
                   )
