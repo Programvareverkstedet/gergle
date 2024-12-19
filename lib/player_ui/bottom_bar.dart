@@ -58,74 +58,80 @@ class PlayerUIBottomBar extends StatelessWidget {
             },
           ),
           Expanded(
-            child: playerBlocBuilder(
-              buildProps: (p) => [
-                p.cachedTimestamp,
-                p.duration,
-                p.currentPercentPosition,
-                p.volume,
-              ],
-              builder: (context, playerState) {
-                // NOTE: slider throws if the value is over 100, so 99.999 is used to avoid
-                //       hitting the limit with floating point errors.
-                double cachedPercent = playerState.cachedTimestamp != null
-                    ? ((playerState.cachedTimestamp! /
-                            max(playerState.duration.inMilliseconds,
-                                0.00000000000001)) *
-                        1000 *
-                        99.999)
-                    : 0.0;
-                if (0 < cachedPercent || cachedPercent > 100) {
-                  cachedPercent = 0;
-                }
-                return Flex(
-                  direction: Axis.horizontal,
+            child: LayoutBuilder(
+              builder: (context, constraint) {
+                return Row(
                   children: [
-                    Text(
-                      formatTime(
-                        Duration(
-                          milliseconds:
-                              playerState.currentPercentPosition != null
-                                  ? (playerState.currentPercentPosition! *
-                                          playerState.duration.inMilliseconds *
-                                          0.01)
-                                      .round()
-                                  : 0,
+                    playerBlocBuilder(
+                      buildProps: (p) => [p.currentPercentPosition, p.duration],
+                      builder: (context, playerState) {
+                        final milliseconds =
+                            (playerState.currentPercentPosition! *
+                                    playerState.duration.inMilliseconds *
+                                    0.01)
+                                .round();
+                        return Text(
+                          formatTime(
+                            Duration(milliseconds: milliseconds),
+                          ),
+                        );
+                      },
+                    ),
+                    Flexible(
+                      flex: 5,
+                      child: playerBlocBuilder(
+                        buildProps: (p) => [
+                          p.cachedTimestamp,
+                          p.currentPercentPosition,
+                          p.duration,
+                        ],
+                        builder: (context, playerState) {
+                          // NOTE: slider throws if the value is over 100, so 99.999 is used to avoid
+                          //       hitting the limit with floating point errors.
+                          double cachedPercent = playerState.cachedTimestamp !=
+                                  null
+                              ? ((playerState.cachedTimestamp! /
+                                      max(playerState.duration.inMilliseconds,
+                                          0.00000000000001)) *
+                                  1000 *
+                                  99.999)
+                              : 0.0;
+                          if (0 < cachedPercent || cachedPercent > 100) {
+                            cachedPercent = 0;
+                          }
+                          return Slider(
+                            value: playerState.currentPercentPosition ?? 0,
+                            max: 100.0,
+                            secondaryTrackValue: cachedPercent,
+                            onChanged: (value) {
+                              log('Setting time to $value');
+                              BlocProvider.of<ConnectionStateBloc>(context)
+                                  .add(Command.time(value));
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    playerBlocBuilder(
+                      buildProps: (p) => [p.duration],
+                      builder: (context, playerState) =>
+                          Text(formatTime(playerState.duration)),
+                    ),
+                    SizedBox(
+                      width: max(constraint.maxWidth / 6, 200),
+                      child: playerBlocBuilder(
+                        buildProps: (p) => [p.volume],
+                        builder: (context, playerState) => Slider(
+                          value: playerState.volume,
+                          max: 130.0,
+                          secondaryTrackValue: 100.0,
+                          onChanged: (value) {
+                            BlocProvider.of<ConnectionStateBloc>(context)
+                                .add(Command.volume(value));
+                          },
                         ),
                       ),
-                    ),
-                    // Text(((playerState.currentPercentPosition ?? 0.0) *
-                    //         0.01 *
-                    //         playerState.duration)
-                    //     .toString()),
-                    Expanded(
-                      flex: 5,
-                      child: Slider(
-                        value: playerState.currentPercentPosition ?? 0,
-                        max: 100.0,
-                        secondaryTrackValue: cachedPercent,
-                        onChanged: (value) {
-                          log('Setting time to $value');
-                          BlocProvider.of<ConnectionStateBloc>(context)
-                              .add(Command.time(value));
-                        },
-                      ),
-                    ),
-                    Text(formatTime(playerState.duration)),
-                    // TODO: set minimum width for this slider
-                    Expanded(
-                      flex: 1,
-                      child: Slider(
-                        value: playerState.volume,
-                        max: 130.0,
-                        secondaryTrackValue: 100.0,
-                        onChanged: (value) {
-                          BlocProvider.of<ConnectionStateBloc>(context)
-                              .add(Command.volume(value));
-                        },
-                      ),
-                    ),
-                    Text('${playerState.volume.round()}%'),
+                    )
                   ],
                 );
               },
