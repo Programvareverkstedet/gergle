@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:gergle/api/commands.dart';
 import 'package:gergle/player_ui/main.dart';
 import 'package:gergle/state/connection_state_bloc.dart';
+import 'package:gergle/state/player_state_bloc.dart';
 
 class PlayerUIAppBar{
   static AppBar appbar(BuildContext context) {
@@ -12,6 +14,27 @@ class PlayerUIAppBar{
       title: const Text('Gergle'),
       backgroundColor: Theme.of(context).primaryColor,
       actions: [
+        IconButton(
+          icon: const Icon(Icons.copy_all),
+          onPressed: () {
+            final state = BlocProvider.of<PlayerStateBloc>(context).state;
+            if (state != null) {
+              final uris = state.playlist
+                  .map((e) => e.filename)
+                  .where((f) => f != '/tmp/the_man.png')
+                  .join('\n');
+              if (uris.isNotEmpty) {
+                Clipboard.setData(ClipboardData(text: uris));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Copied playlist to clipboard'),
+                    duration: Duration(milliseconds: 500),
+                  ),
+                );
+              }
+            }
+          },
+        ),
         DropdownMenu(
           leadingIcon: const Icon(Icons.storage),
           dropdownMenuEntries: const <DropdownMenuEntry<String?>>[
