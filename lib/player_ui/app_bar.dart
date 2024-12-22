@@ -17,6 +17,7 @@ class PlayerUIAppBar {
       actions: [
         IconButton(
           icon: const Icon(Icons.copy_all),
+          tooltip: 'Copy playlist to clipboard',
           onPressed: () {
             final state = BlocProvider.of<PlayerStateBloc>(context).state;
             if (state != null) {

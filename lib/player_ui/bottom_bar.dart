@@ -31,6 +31,7 @@ class PlayerUIBottomBar extends StatelessWidget {
         children: [
           IconButton(
             icon: const Icon(Icons.skip_previous),
+            tooltip: 'Skip to previous track',
             onPressed: () {
               BlocProvider.of<ConnectionStateBloc>(context)
                   .add(Command.playlistPrevious());
@@ -43,6 +44,7 @@ class PlayerUIBottomBar extends StatelessWidget {
                 icon: (playerState.isPlaying)
                     ? const Icon(Icons.pause)
                     : const Icon(Icons.play_arrow),
+                tooltip: (playerState.isPlaying) ? 'Pause' : 'Play',
                 onPressed: () {
                   BlocProvider.of<ConnectionStateBloc>(context)
                       .add(Command.togglePlayback());
@@ -52,6 +54,7 @@ class PlayerUIBottomBar extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.skip_next),
+            tooltip: 'Skip to next track',
             onPressed: () {
               BlocProvider.of<ConnectionStateBloc>(context)
                   .add(Command.playlistNext());
@@ -141,6 +144,7 @@ class PlayerUIBottomBar extends StatelessWidget {
             buildProps: (p) => [p.subtitleTracks],
             builder: (context, playerState) => PopupMenuButton(
               icon: const Icon(Icons.subtitles),
+              tooltip: 'Select subtitle track',
               enabled: playerState.subtitleTracks.isNotEmpty,
               itemBuilder: (context) {
                 return playerState.subtitleTracks
@@ -160,6 +164,7 @@ class PlayerUIBottomBar extends StatelessWidget {
             buildProps: (p) => [p.isLooping],
             builder: (context, playerState) => IconButton(
               icon: const Icon(Icons.repeat),
+              tooltip: 'Toggle playlist looping',
               isSelected: playerState.isLooping,
               onPressed: () {
                 BlocProvider.of<ConnectionStateBloc>(context)
@@ -169,6 +174,7 @@ class PlayerUIBottomBar extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.shuffle),
+            tooltip: 'Shuffle playlist',
             onPressed: () {
               BlocProvider.of<ConnectionStateBloc>(context)
                   .add(Command.shuffle());
@@ -176,6 +182,8 @@ class PlayerUIBottomBar extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.delete_forever),
+            tooltip: 'Clear playlist',
+            color: Colors.redAccent,
             onPressed: () {
               BlocProvider.of<ConnectionStateBloc>(context)
                   .add(Command.playlistClear());

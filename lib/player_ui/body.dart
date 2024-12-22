@@ -84,6 +84,7 @@ class PlayerUIBody extends StatelessWidget {
             icon: playerState.isPlaying && item.current
                 ? const Icon(Icons.pause)
                 : const Icon(Icons.play_arrow),
+            tooltip: 'Play this track',
             onPressed: () {
               BlocProvider.of<ConnectionStateBloc>(context)
                   .add(Command.playlistGoto(i));
@@ -96,11 +97,13 @@ class PlayerUIBody extends StatelessWidget {
         children: [
           IconButton(
             icon: const Icon(Icons.copy),
+            tooltip: 'Copy uri to clipboard',
             onPressed: () =>
                 Clipboard.setData(ClipboardData(text: item.filename)),
           ),
           IconButton(
             icon: const Icon(Icons.delete_forever),
+            tooltip: 'Remove from playlist',
             color: Colors.redAccent,
             onPressed: () {
               BlocProvider.of<ConnectionStateBloc>(context)
@@ -138,6 +141,7 @@ class PlayerUIBody extends StatelessWidget {
         SizedBox.fromSize(size: const Size(10, 0)),
         IconButton(
           icon: const Icon(Icons.send),
+          tooltip: 'Add link to playlist',
           onPressed: () {
             BlocProvider.of<ConnectionStateBloc>(context)
                 .add(Command.load(_textController.text));
@@ -146,6 +150,7 @@ class PlayerUIBody extends StatelessWidget {
         ),
         IconButton(
           icon: const Icon(Icons.playlist_add),
+          tooltip: 'Add many links',
           onPressed: () async {
             final blocProvider = BlocProvider.of<ConnectionStateBloc>(context);
             final links = await _showAddManyLinksDialog(context);
