@@ -142,6 +142,15 @@ class Command extends PlayerConnectionEvent {
     );
   }
 
+  factory Command.setSubtitleTrack(int? track) {
+    return Command(
+      type: 'set_subtitle_track',
+      value: {
+        'track': track,
+      },
+    );
+  }
+
   factory Command.setLooping(bool value) {
     return Command(
       type: 'set_looping',
