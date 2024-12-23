@@ -132,11 +132,13 @@ class Chapter {
 class SubtitleTrack {
   final int id;
   final String title;
+  final bool selected;
   final String? lang;
 
   const SubtitleTrack({
     required this.id,
     required this.title,
+    required this.selected,
     required this.lang,
   });
 
@@ -144,6 +146,7 @@ class SubtitleTrack {
     return SubtitleTrack(
       id: json['id'],
       title: json['title'],
+      selected: json.containsKey('selected') ? json['selected'] : false,
       lang: json['lang'],
     );
   }
