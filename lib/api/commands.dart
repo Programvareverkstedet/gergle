@@ -36,21 +36,21 @@ class Command extends PlayerConnectionEvent {
     return jsonEncode(toJson());
   }
 
-  factory Command.subscribe(String property) {
-    return Command(
-      type: 'subscribe',
-      value: {
-        'property': property,
-      },
-    );
-  }
+  // factory Command.subscribe(String property) {
+  //   return Command(
+  //     type: 'subscribe',
+  //     value: {
+  //       'property': property,
+  //     },
+  //   );
+  // }
 
-  factory Command.unsubscribeAll() {
-    return Command(
-      type: 'unsubscribe_all',
-      value: {},
-    );
-  }
+  // factory Command.unsubscribeAll() {
+  //   return Command(
+  //     type: 'unsubscribe_all',
+  //     value: {},
+  //   );
+  // }
 
   factory Command.load(String url) {
     return Command(
