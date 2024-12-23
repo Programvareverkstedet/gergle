@@ -107,7 +107,7 @@ class PlayerUIBody extends StatelessWidget {
             color: Colors.redAccent,
             onPressed: () {
               BlocProvider.of<ConnectionStateBloc>(context)
-                  .add(Command.playlistRemove(i));
+                  .add(Command.playlistRemove([i]));
             },
           ),
         ],
@@ -133,7 +133,7 @@ class PlayerUIBody extends StatelessWidget {
             ),
             onSubmitted: (value) {
               BlocProvider.of<ConnectionStateBloc>(context)
-                  .add(Command.load(value));
+                  .add(Command.load([value]));
               _textController.clear();
             },
           ),
@@ -144,7 +144,7 @@ class PlayerUIBody extends StatelessWidget {
           tooltip: 'Add link to playlist',
           onPressed: () {
             BlocProvider.of<ConnectionStateBloc>(context)
-                .add(Command.load(_textController.text));
+                .add(Command.load([_textController.text]));
             _textController.clear();
           },
         ),
@@ -159,9 +159,7 @@ class PlayerUIBody extends StatelessWidget {
               return;
             }
 
-            for (final link in links.split('\n')) {
-              blocProvider.add(Command.load(link));
-            }
+            blocProvider.add(Command.load(links.split('\n')));
           },
         ),
       ],

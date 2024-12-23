@@ -52,11 +52,11 @@ class Command extends PlayerConnectionEvent {
   //   );
   // }
 
-  factory Command.load(String url) {
+  factory Command.load(List<String> urls) {
     return Command(
       type: 'load',
       value: {
-        'url': url,
+        'urls': urls,
       },
     );
   }
@@ -116,11 +116,11 @@ class Command extends PlayerConnectionEvent {
     );
   }
 
-  factory Command.playlistRemove(int position) {
+  factory Command.playlistRemove(List<int> positions) {
     return Command(
       type: 'playlist_remove',
       value: {
-        'position': position,
+        'positions': positions,
       },
     );
   }
