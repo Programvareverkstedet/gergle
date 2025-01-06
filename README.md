@@ -1,16 +1,27 @@
 # gergle
 
-A new Flutter project.
+The second season for the frontend of the collaborative music player system grzegorz, succeeding the [grzegorz-clients](https://git.pvv.ntnu.no/Grzegorz/grzegorz-clients) GUI.
 
-## Getting Started
+This player is meant to be used with the [websocket API from greg-ng](https://git.pvv.ntnu.no/Projects/greg-ng/src/branch/main/src/api/websocket_v1.rs).
 
-This project is a starting point for a Flutter application.
+### Getting started
 
-A few resources to get you started if this is your first Flutter project:
+- [Install flutter](https://docs.flutter.dev/get-started/install) (or get your environment with nix)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- [Run a local instance of greg-ng](https://git.pvv.ntnu.no/Grzegorz/greg-ng/src/branch/main/README.md)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Start your app with `flutter run`.
+
+### Running on web
+
+While the software is maintained as a native desktop app for linux, we don't have development capacity to ensure it runs for mac and windows as well. But fear not, it builds as a webpage.
+
+If you have chromiumm installed, you can use `flutter run -d chrome`
+
+If you do not have chromium installed, you can build the website first, and then host it in a webserver of your choice. Here's an example with python's builtin webserver:
+
+```bash
+flutter build web
+python -m http.server -d build/web/
+```
+
