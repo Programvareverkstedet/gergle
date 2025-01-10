@@ -46,6 +46,10 @@
         flutterMode = "debug";
         targetFlutterPlatform = "web";
       });
+      web-wasm = pkgs.flutter.buildFlutterApplication (common // {
+        targetFlutterPlatform = "web";
+        flutterBuildFlags = [ "--wasm" ];
+      });
     });
 
     apps = forAllSystems (system: pkgs: {
@@ -62,6 +66,13 @@
         type = "app";
         program = toString (pkgs.writeShellScript "gergle-web-debug" ''
           ${pkgs.python3}/bin/python -m http.server -d ${self.packages.${system}.web-debug}/
+        '');
+      };
+
+      web-wasm = {
+        type = "app";
+        program = toString (pkgs.writeShellScript "gergle-web-wasm" ''
+          ${pkgs.python3}/bin/python -m http.server -d ${self.packages.${system}.web-wasm}/
         '');
       };
     });
