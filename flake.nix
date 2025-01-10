@@ -26,6 +26,8 @@
       };
     });
 
+    nixosModules.default = ./module.nix;
+
     packages = forAllSystems (system: pkgs: let
       common = {
         pname = "gergle";
@@ -51,6 +53,13 @@
         flutterBuildFlags = [ "--wasm" ];
       });
     });
+
+    overlays.default = final: prev: {
+      gergle-desktop = self.packages.${final.system}.linux;
+      gergle-web = self.packages.${final.system}.web;
+      gergle-web-debug = self.packages.${final.system}.web-debug;
+      gergle-web-wasm = self.packages.${final.system}.web-wasm;
+    };
 
     apps = forAllSystems (system: pkgs: {
       default = self.apps.${system}.web;
