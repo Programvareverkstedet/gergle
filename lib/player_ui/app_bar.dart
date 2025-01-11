@@ -42,11 +42,11 @@ class PlayerUIAppBar {
           dropdownMenuEntries: const <DropdownMenuEntry<String?>>[
             DropdownMenuEntry(
               label: 'Georg',
-              value: 'wss://georg.pvv.ntnu.no/ws',
+              value: 'wss://georg-backend.pvv.ntnu.no/ws',
             ),
             DropdownMenuEntry(
               label: 'Brzeczyszczykiewicz',
-              value: 'wss://brzeczyszczykiewicz.pvv.ntnu.no/ws',
+              value: 'wss://brzeczyszczykiewicz-backend.pvv.ntnu.no/ws',
             ),
             if (kDebugMode) ...[
               DropdownMenuEntry(
