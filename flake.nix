@@ -1,5 +1,5 @@
 {
-  inputs.nixpkgs.url = "nixpkgs/nixos-24.11";
+  inputs.nixpkgs.url = "nixpkgs/nixos-unstable";
   outputs = { self, nixpkgs }: let
     inherit (nixpkgs) lib;
     systems = [
