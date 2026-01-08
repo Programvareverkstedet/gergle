@@ -55,10 +55,10 @@
     });
 
     overlays.default = final: prev: {
-      gergle-desktop = self.packages.${final.system}.linux;
-      gergle-web = self.packages.${final.system}.web;
-      gergle-web-debug = self.packages.${final.system}.web-debug;
-      gergle-web-wasm = self.packages.${final.system}.web-wasm;
+      gergle-desktop = self.packages.${final.stdenv.hostPlatform.system}.linux;
+      gergle-web = self.packages.${final.stdenv.hostPlatform.system}.web;
+      gergle-web-debug = self.packages.${final.stdenv.hostPlatform.system}.web-debug;
+      gergle-web-wasm = self.packages.${final.stdenv.hostPlatform.system}.web-wasm;
     };
 
     apps = forAllSystems (system: pkgs: {
