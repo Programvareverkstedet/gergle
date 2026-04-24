@@ -17,7 +17,7 @@
     devShells = forAllSystems (_: pkgs: {
       default = pkgs.mkShell {
         packages = with pkgs; [
-          flutter
+          flutter338
 
           # https://github.com/NixOS/nixpkgs/issues/341147
           pkg-config
@@ -35,20 +35,22 @@
         src = ./.;
         autoPubspecLock = ./pubspec.lock;
       };
+
+      flutter = pkgs.flutter338;
     in {
       default = self.packages.${system}.linux;
-      linux = pkgs.flutter.buildFlutterApplication (common // {});
-      linux-debug = pkgs.flutter.buildFlutterApplication (common // {
+      linux = flutter.buildFlutterApplication (common // {});
+      linux-debug = flutter.buildFlutterApplication (common // {
         flutterMode = "debug";
       });
-      web = pkgs.flutter.buildFlutterApplication (common // {
+      web = flutter.buildFlutterApplication (common // {
         targetFlutterPlatform = "web";
       });
-      web-debug = pkgs.flutter.buildFlutterApplication (common // {
+      web-debug = flutter.buildFlutterApplication (common // {
         flutterMode = "debug";
         targetFlutterPlatform = "web";
       });
-      web-wasm = pkgs.flutter.buildFlutterApplication (common // {
+      web-wasm = flutter.buildFlutterApplication (common // {
         targetFlutterPlatform = "web";
         flutterBuildFlags = [ "--wasm" ];
       });
