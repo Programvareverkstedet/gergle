@@ -82,12 +82,13 @@ class PlayerUIAppBar {
                 return const SizedBox.shrink();
               }
             }),
-        IconButton(
-          icon: const Icon(Icons.settings),
-          onPressed: () {
-            throw UnimplementedError();
-          },
-        ),
+        // TODO: implement settings page
+        // IconButton(
+        //   icon: const Icon(Icons.settings),
+        //   onPressed: () {
+        //      ...
+        //   },
+        // ),
         if (kDebugMode) ...[
           const SizedBox(width: 50),
         ],
