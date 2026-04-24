@@ -52,24 +52,29 @@
       });
 
     in {
-      default = self.packages.${system}.linux;
-      linux = pkgs.callPackage ./nix/package.nix {
+      default = self.packages.${system}.gergle-linux;
+
+      gergle-linux = pkgs.callPackage ./nix/package.nix {
         inherit src flutter;
       };
-      linux-debug = pkgs.callPackage ./nix/package.nix {
+
+      gergle-linux-debug = pkgs.callPackage ./nix/package.nix {
         inherit src flutter;
         isDebug = true;
       };
-      web = pkgs.callPackage ./nix/package.nix {
+
+      gergle-web = pkgs.callPackage ./nix/package.nix {
         inherit src flutter;
         isWeb = true;
       };
-      web-debug = pkgs.callPackage ./nix/package.nix {
+
+      gergle-web-debug = pkgs.callPackage ./nix/package.nix {
         inherit src flutter;
         isWeb = true;
         isDebug = true;
       };
-      web-wasm = pkgs.callPackage ./nix/package.nix {
+
+      gergle-web-wasm = pkgs.callPackage ./nix/package.nix {
         inherit src flutter;
         isWeb = true;
         isWasm = true;
@@ -77,38 +82,38 @@
     });
 
     overlays.default = final: prev: {
-      gergle-desktop = self.packages.${final.stdenv.hostPlatform.system}.linux;
-      gergle-web = self.packages.${final.stdenv.hostPlatform.system}.web;
-      gergle-web-debug = self.packages.${final.stdenv.hostPlatform.system}.web-debug;
-      gergle-web-wasm = self.packages.${final.stdenv.hostPlatform.system}.web-wasm;
+      gergle-desktop = self.packages.${final.stdenv.hostPlatform.system}.gergle-linux;
+      gergle-web = self.packages.${final.stdenv.hostPlatform.system}.gergle-web;
+      gergle-web-debug = self.packages.${final.stdenv.hostPlatform.system}.gergle-web-debug;
+      gergle-web-wasm = self.packages.${final.stdenv.hostPlatform.system}.gergle-web-wasm;
     };
 
     apps = forAllSystems (system: pkgs: {
-      default = self.apps.${system}.web;
+      default = self.apps.${system}.gergle-web;
 
-      linux = {
+      gergle-linux = {
         type = "app";
-        program = lib.getExe self.packages.${system}.linux;
+        program = lib.getExe self.packages.${system}.gergle-linux;
       };
 
-      web = {
+      gergle-web = {
         type = "app";
         program = toString (pkgs.writeShellScript "gergle-web" ''
-          ${pkgs.python3}/bin/python -m http.server -d ${self.packages.${system}.web}/
+          ${pkgs.python3}/bin/python -m http.server -d ${self.packages.${system}.gergle-web}/
         '');
       };
 
-      web-debug = {
+      gergle-web-debug = {
         type = "app";
         program = toString (pkgs.writeShellScript "gergle-web-debug" ''
-          ${pkgs.python3}/bin/python -m http.server -d ${self.packages.${system}.web-debug}/
+          ${pkgs.python3}/bin/python -m http.server -d ${self.packages.${system}.gergle-web-debug}/
         '');
       };
 
-      web-wasm = {
+      gergle-web-wasm = {
         type = "app";
         program = toString (pkgs.writeShellScript "gergle-web-wasm" ''
-          ${pkgs.python3}/bin/python -m http.server -d ${self.packages.${system}.web-wasm}/
+          ${pkgs.python3}/bin/python -m http.server -d ${self.packages.${system}.gergle-web-wasm}/
         '');
       };
     });
