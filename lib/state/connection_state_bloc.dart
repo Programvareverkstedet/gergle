@@ -12,16 +12,20 @@ import 'package:gergle/api/events.dart';
 import 'package:gergle/state/player_state_bloc.dart';
 
 @immutable
-sealed class PlayerConnectionState {}
+sealed class PlayerConnectionState {
+  const PlayerConnectionState();
+}
 
 @immutable
-class Disconnected extends PlayerConnectionState {}
+class Disconnected extends PlayerConnectionState {
+  const Disconnected();
+}
 
 @immutable
 class Connecting extends PlayerConnectionState {
   final String uri;
 
-  Connecting(this.uri);
+  const Connecting(this.uri);
 }
 
 @immutable
@@ -29,7 +33,7 @@ class Connected extends PlayerConnectionState {
   final String uri;
   final WebSocketChannel channel;
 
-  Connected(this.uri, this.channel);
+  const Connected(this.uri, this.channel);
 }
 
 @immutable
@@ -37,7 +41,7 @@ class ConnectionError extends PlayerConnectionState {
   final String message;
   final String uri;
 
-  ConnectionError(this.message, this.uri);
+  const ConnectionError(this.message, this.uri);
 }
 
 class ConnectionStateBloc
