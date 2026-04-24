@@ -30,7 +30,6 @@
 
     packages = forAllSystems (system: pkgs: let
       common = {
-        pname = "gergle";
         version = "0.1.0";
         src = ./.;
         autoPubspecLock = ./pubspec.lock;
@@ -39,18 +38,24 @@
       flutter = pkgs.flutter338;
     in {
       default = self.packages.${system}.linux;
-      linux = flutter.buildFlutterApplication (common // {});
+      linux = flutter.buildFlutterApplication (common // {
+        pname = "gergle-linux";
+      });
       linux-debug = flutter.buildFlutterApplication (common // {
+        pname = "gergle-linux-debug";
         flutterMode = "debug";
       });
       web = flutter.buildFlutterApplication (common // {
+        pname = "gergle-web";
         targetFlutterPlatform = "web";
       });
       web-debug = flutter.buildFlutterApplication (common // {
+        pname = "gergle-web-debug";
         flutterMode = "debug";
         targetFlutterPlatform = "web";
       });
       web-wasm = flutter.buildFlutterApplication (common // {
+        pname = "gergle-wasm";
         targetFlutterPlatform = "web";
         flutterBuildFlags = [ "--wasm" ];
       });
