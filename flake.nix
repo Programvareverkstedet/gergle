@@ -17,7 +17,7 @@
     devShells = forAllSystems (_: pkgs: {
       default = pkgs.mkShell {
         packages = with pkgs; [
-          flutter338
+          flutter341
 
           # https://github.com/NixOS/nixpkgs/issues/341147
           pkg-config
@@ -41,7 +41,16 @@
           (baseName == "flake.nix" && type == "regular")
           (baseName == "module.nix" && type == "regular")
         ])) ./.;
-      flutter = pkgs.flutter338;
+
+      # Flutter is kinda brokey at the time of writing this, seemingly not all executables
+      # are marked as executable, and this only affects weird build artifacts like the web output
+      # which isn't really used within nixpkgs. ¯\_(ツ)_/¯
+      flutter = pkgs.flutter341.overrideAttrs (prev: {
+        postInstall = prev.postInstall or "" + ''
+          chmod +x "$out"/bin/cache/artifacts/engine/linux-x64/font-subset
+        '';
+      });
+
     in {
       default = self.packages.${system}.linux;
       linux = pkgs.callPackage ./nix/package.nix {

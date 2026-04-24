@@ -9,7 +9,7 @@
   isDebug ? false,
 }:
 
-flutter.buildFlutterApplication {
+(flutter.buildFlutterApplication.override { inherit flutter; }) {
   pname = let
     variant = if isWeb && isWasm then "wasm"
               else if isWeb then "web"
