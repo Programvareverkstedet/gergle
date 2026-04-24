@@ -26,41 +26,45 @@
       };
     });
 
-    nixosModules.default = ./module.nix;
+    nixosModules.default = ./nix/module.nix;
 
     packages = forAllSystems (system: pkgs: let
-      common = {
-        version = "0.1.0";
-        src = ./.;
-        autoPubspecLock = ./pubspec.lock;
-      };
+      src = builtins.filterSource (path: type: let
+        baseName = baseNameOf (toString path);
+      in !(lib.any (b: b) [
+          (!(lib.cleanSourceFilter path type))
+          (baseName == ".gitea" && type == "directory")
+          (baseName == "nix" && type == "directory")
 
+          (baseName == ".envrc" && type == "regular")
+          (baseName == "flake.lock" && type == "regular")
+          (baseName == "flake.nix" && type == "regular")
+          (baseName == "module.nix" && type == "regular")
+        ])) ./.;
       flutter = pkgs.flutter338;
     in {
       default = self.packages.${system}.linux;
-      linux = flutter.buildFlutterApplication (common // {
-        pname = "gergle-linux";
-        meta.mainProgram = "gergle";
-      });
-      linux-debug = flutter.buildFlutterApplication (common // {
-        pname = "gergle-linux-debug";
-        flutterMode = "debug";
-        meta.mainProgram = "gergle";
-      });
-      web = flutter.buildFlutterApplication (common // {
-        pname = "gergle-web";
-        targetFlutterPlatform = "web";
-      });
-      web-debug = flutter.buildFlutterApplication (common // {
-        pname = "gergle-web-debug";
-        flutterMode = "debug";
-        targetFlutterPlatform = "web";
-      });
-      web-wasm = flutter.buildFlutterApplication (common // {
-        pname = "gergle-wasm";
-        targetFlutterPlatform = "web";
-        flutterBuildFlags = [ "--wasm" ];
-      });
+      linux = pkgs.callPackage ./nix/package.nix {
+        inherit src flutter;
+      };
+      linux-debug = pkgs.callPackage ./nix/package.nix {
+        inherit src flutter;
+        isDebug = true;
+      };
+      web = pkgs.callPackage ./nix/package.nix {
+        inherit src flutter;
+        isWeb = true;
+      };
+      web-debug = pkgs.callPackage ./nix/package.nix {
+        inherit src flutter;
+        isWeb = true;
+        isDebug = true;
+      };
+      web-wasm = pkgs.callPackage ./nix/package.nix {
+        inherit src flutter;
+        isWeb = true;
+        isWasm = true;
+      };
     });
 
     overlays.default = final: prev: {
