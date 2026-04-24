@@ -22,4 +22,7 @@
   flutterMode = if isDebug then "debug" else "release";
   targetFlutterPlatform = if isWasm || isWeb then "web" else "linux";
   flutterBuildFlags = lib.optionals isWasm [ "--wasm" ];
+  meta = lib.optionalAttrs (!isWeb && !isWasm) {
+    mainProgram = "gergle";
+  };
 }
