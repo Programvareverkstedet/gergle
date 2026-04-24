@@ -40,10 +40,12 @@
       default = self.packages.${system}.linux;
       linux = flutter.buildFlutterApplication (common // {
         pname = "gergle-linux";
+        meta.mainProgram = "gergle";
       });
       linux-debug = flutter.buildFlutterApplication (common // {
         pname = "gergle-linux-debug";
         flutterMode = "debug";
+        meta.mainProgram = "gergle";
       });
       web = flutter.buildFlutterApplication (common // {
         pname = "gergle-web";
@@ -70,6 +72,11 @@
 
     apps = forAllSystems (system: pkgs: {
       default = self.apps.${system}.web;
+
+      linux = {
+        type = "app";
+        program = lib.getExe self.packages.${system}.linux;
+      };
 
       web = {
         type = "app";
