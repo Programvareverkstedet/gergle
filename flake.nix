@@ -96,6 +96,11 @@
         program = lib.getExe self.packages.${system}.gergle-linux;
       };
 
+      gergle-linux-debug = {
+        type = "app";
+        program = lib.getExe self.packages.${system}.gergle-linux-debug;
+      };
+
       gergle-web = {
         type = "app";
         program = toString (pkgs.writeShellScript "gergle-web" ''
