@@ -1,3 +1,4 @@
+import 'dart:async' show StreamSubscription;
 import 'dart:convert';
 import 'dart:developer' show log;
 import 'dart:io';
@@ -48,6 +49,9 @@ class ConnectionStateBloc
     extends Bloc<PlayerConnectionEvent, PlayerConnectionState> {
   final PlayerStateBloc playerStateBloc;
 
+  int _generation = 0;
+  StreamSubscription? _subscription;
+
   ConnectionStateBloc(this.playerStateBloc) : super(Disconnected()) {
     on<Connect>((event, emit) async {
       if (state is Connected) {
@@ -56,10 +60,14 @@ class ConnectionStateBloc
           return;
         } else {
           // Clear connection, and reconnect
+          await _subscription?.cancel();
+          _subscription = null;
           (state as Connected).channel.sink.close();
           playerStateBloc.add(const ClearPlayerState());
         }
       }
+
+      final generation = ++_generation;
 
       emit(Connecting(event.uri));
 
@@ -82,7 +90,7 @@ class ConnectionStateBloc
         return;
       }
 
-      channel.stream.listen(
+      _subscription = channel.stream.listen(
         (event) {
           final jsonData = jsonDecode(event as String);
           if (jsonData is Map) {
@@ -113,8 +121,8 @@ class ConnectionStateBloc
           log('Stack trace: $stackTrace');
         },
         onDone: () {
-          // Only reconnect if we are still using the same channel.
-          if (state is! Connected || (state as Connected).channel != channel) {
+          // Only reconnect if this is still the active connection attempt.
+          if (generation != _generation) {
             return;
           }
           add(Disconnect());
@@ -126,11 +134,13 @@ class ConnectionStateBloc
       emit(Connected(event.uri, channel));
     });
 
-    on<Disconnect>((event, emit) {
+    on<Disconnect>((event, emit) async {
       if (state is! Connected) {
         log('Cannot disconnect when not connected');
         return;
       }
+      await _subscription?.cancel();
+      _subscription = null;
       (state as Connected).channel.sink.close();
       playerStateBloc.add(const ClearPlayerState());
       emit(Disconnected());
