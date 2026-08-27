@@ -113,6 +113,10 @@ class ConnectionStateBloc
           log('Stack trace: $stackTrace');
         },
         onDone: () {
+          // Only reconnect if we are still using the same channel.
+          if (state is! Connected || (state as Connected).channel != channel) {
+            return;
+          }
           add(Disconnect());
           log('Connection closed, reconnecting...');
           add(Connect(event.uri));
