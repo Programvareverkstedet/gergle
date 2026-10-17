@@ -5,17 +5,29 @@ import 'player_ui/main.dart';
 import 'state/connection_state_bloc.dart';
 import 'state/player_state_bloc.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  final PlayerStateBloc playerStateBloc = PlayerStateBloc();
+  final ConnectionStateBloc connectionStateBloc =
+      ConnectionStateBloc(playerStateBloc);
+
+  runApp(MyApp(
+    playerStateBloc: playerStateBloc,
+    connectionStateBloc: connectionStateBloc,
+  ));
+}
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({
+    super.key,
+    required this.playerStateBloc,
+    required this.connectionStateBloc,
+  });
+
+  final PlayerStateBloc playerStateBloc;
+  final ConnectionStateBloc connectionStateBloc;
 
   @override
   Widget build(BuildContext context) {
-    final PlayerStateBloc playerStateBloc = PlayerStateBloc();
-    final ConnectionStateBloc connectionStateBloc =
-        ConnectionStateBloc(playerStateBloc);
-
     return MaterialApp(
       title: 'Gergle',
       theme: ThemeData(
