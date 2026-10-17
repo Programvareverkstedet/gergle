@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'preferences.dart';
+import 'api/commands.dart';
 import 'player_ui/main.dart';
+import 'servers.dart';
 import 'state/connection_state_bloc.dart';
 import 'state/player_state_bloc.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   final PlayerStateBloc playerStateBloc = PlayerStateBloc();
   final ConnectionStateBloc connectionStateBloc =
       ConnectionStateBloc(playerStateBloc);
+
+  final lastServerUri = await loadLastServerUri();
+  final isKnownServer =
+      lastServerUri != null && knownServers.any((s) => s.uri == lastServerUri);
+  if (lastServerUri != null && isKnownServer) {
+    connectionStateBloc.add(Connect(lastServerUri, restored: true));
+  }
 
   runApp(MyApp(
     playerStateBloc: playerStateBloc,

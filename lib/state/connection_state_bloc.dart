@@ -1,4 +1,4 @@
-import 'dart:async' show StreamSubscription;
+import 'dart:async' show StreamSubscription, TimeoutException;
 import 'dart:convert';
 import 'dart:developer' show log;
 import 'dart:io';
@@ -76,7 +76,11 @@ class ConnectionStateBloc
       );
 
       try {
-        await channel.ready;
+        if (event.restored) {
+          await channel.ready.timeout(const Duration(seconds: 5));
+        } else {
+          await channel.ready;
+        }
       } on WebSocketChannelException catch (e) {
         late final String message;
         if (e.inner is WebSocketException) {
@@ -85,8 +89,19 @@ class ConnectionStateBloc
           message = e.message ?? e.toString();
         }
 
+        if (event.restored) {
+          log('Restored connection to ${event.uri} failed: $message, ignoring');
+          emit(Disconnected());
+          return;
+        }
+
         log('Error connecting to ${event.uri}: $message');
         emit(ConnectionError(message, event.uri));
+        return;
+      } on TimeoutException {
+        log('Restored connection to ${event.uri} timed out, ignoring');
+        channel.sink.close();
+        emit(Disconnected());
         return;
       }
 

@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:gergle/api/commands.dart';
 import 'package:gergle/player_ui/main.dart';
+import 'package:gergle/preferences.dart';
+import 'package:gergle/servers.dart';
 import 'package:gergle/state/connection_state_bloc.dart';
 import 'package:gergle/state/player_state_bloc.dart';
 
@@ -39,22 +41,11 @@ class PlayerUIAppBar {
         ),
         DropdownMenu(
           leadingIcon: const Icon(Icons.storage),
-          dropdownMenuEntries: const <DropdownMenuEntry<String?>>[
-            DropdownMenuEntry(
-              label: 'Georg',
-              value: 'wss://georg-backend.pvv.ntnu.no/ws',
-            ),
-            DropdownMenuEntry(
-              label: 'Brzeczyszczykiewicz',
-              value: 'wss://brzeczyszczykiewicz-backend.pvv.ntnu.no/ws',
-            ),
-            if (kDebugMode) ...[
-              DropdownMenuEntry(
-                label: 'Local 8009',
-                value: 'ws://localhost:8009/ws',
-              ),
-            ],
-            DropdownMenuEntry(
+          initialSelection: _selectedKnownServerUri(context),
+          dropdownMenuEntries: <DropdownMenuEntry<String?>>[
+            for (final server in knownServers)
+              DropdownMenuEntry(label: server.label, value: server.uri),
+            const DropdownMenuEntry(
               value: null,
               label: 'Custom...',
             ),
@@ -69,6 +60,7 @@ class PlayerUIAppBar {
               return;
             }
 
+            await saveLastServerUri(value);
             connectionStateBloc.add(Connect(value));
           },
         ),
@@ -94,6 +86,17 @@ class PlayerUIAppBar {
         ],
       ],
     );
+  }
+
+  static String? _selectedKnownServerUri(BuildContext context) {
+    final state = BlocProvider.of<ConnectionStateBloc>(context).state;
+    final String? uri = switch (state) {
+      Connected(:final uri) => uri,
+      Connecting(:final uri) => uri,
+      ConnectionError(:final uri) => uri,
+      Disconnected() => null,
+    };
+    return knownServers.any((s) => s.uri == uri) ? uri : null;
   }
 
   static Future<String?> _askForServerUriMenu(BuildContext context) async {

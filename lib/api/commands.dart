@@ -4,8 +4,9 @@ sealed class PlayerConnectionEvent {}
 
 class Connect extends PlayerConnectionEvent {
   final String uri;
+  final bool restored;
 
-  Connect(this.uri);
+  Connect(this.uri, {this.restored = false});
 }
 
 class Disconnect extends PlayerConnectionEvent {}
