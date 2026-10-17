@@ -21,7 +21,7 @@ Widget playerBlocBuilder({
         (current != null && (buildProps(previous) != buildProps(current))),
     builder: (context, playerState) {
       if (playerState == null) {
-        return const Placeholder();
+        return const SizedBox.shrink();
       }
       return builder(context, playerState);
     },
